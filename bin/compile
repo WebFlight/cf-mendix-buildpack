@@ -278,7 +278,6 @@ def buildstatus_callback(error_file):
     else:
         logging.warning('No build status callback url set, so not going to submit the status')
 
-
 def set_up_nginx():
     buildpackutil.download_and_unpack(
         buildpackutil.get_blobstore_url(
@@ -287,7 +286,6 @@ def set_up_nginx():
         BUILD_DIR,
         cache_dir=CACHE_DIR,
     )
-
 
 if __name__ == '__main__':
     preflight_check()

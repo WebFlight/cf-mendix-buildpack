@@ -17,6 +17,7 @@ import instadeploy
 import metrics
 from nginx import get_path_config, gen_htpasswd
 from buildpackutil import i_am_primary_instance
+from shutil import copyfile
 
 logger.setLevel(buildpackutil.get_buildpack_loglevel())
 
@@ -895,6 +896,11 @@ def complete_start_procedure_safe_to_use_for_restart(m2ee):
     configure_logging(m2ee)
     display_running_version(m2ee)
     configure_debugger(m2ee)
+
+def set_up_healthcheck():
+    copyfile('healthcheck/healthcheck', '/etc/cron.d/')
+    logger.info('Copied healthcheck cron in cron.d folder.')
+
 
 
 if __name__ == '__main__':

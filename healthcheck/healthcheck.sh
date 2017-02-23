@@ -5,5 +5,5 @@ do
   then
       killall -u vcap  
   fi
-  sleep 10
+  sleep 1
 done

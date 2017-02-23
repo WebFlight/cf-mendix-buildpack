@@ -898,8 +898,7 @@ def complete_start_procedure_safe_to_use_for_restart(m2ee):
     configure_debugger(m2ee)
 
 def set_up_healthcheck():
-    copyfile('healthcheck/healthcheck', '/etc/cron.d/healthcheck')
-    logger.info('Copied healthcheck cron in cron.d folder.')
+    # copyfile('healthcheck/healthcheck', '/etc/cron.d/healthcheck')
 
 if __name__ == '__main__':
     if os.getenv('CF_INSTANCE_INDEX') is None:

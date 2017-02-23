@@ -897,8 +897,10 @@ def complete_start_procedure_safe_to_use_for_restart(m2ee):
     display_running_version(m2ee)
     configure_debugger(m2ee)
 
-# def set_up_healthcheck():
-    # copyfile('healthcheck/healthcheck', '/etc/cron.d/')
+def set_up_healthcheck():
+    subprocess.Popen([
+        '/bin/bash', 'nginx', 'healthcheck/healthcheck.sh'
+    ])
 
 if __name__ == '__main__':
     if os.getenv('CF_INSTANCE_INDEX') is None:
@@ -919,7 +921,7 @@ if __name__ == '__main__':
 
     service_backups()
     set_up_nginx_files(m2ee)
-    # set_up_healthcheck
+    set_up_healthcheck()
     complete_start_procedure_safe_to_use_for_restart(m2ee)
     set_up_instadeploy_if_deploy_password_is_set(m2ee)
     start_metrics(m2ee)

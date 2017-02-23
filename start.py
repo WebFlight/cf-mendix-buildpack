@@ -896,7 +896,7 @@ def complete_start_procedure_safe_to_use_for_restart(m2ee):
     display_running_version(m2ee)
     configure_debugger(m2ee)
 
-def set_up_healthcheck():
+def start_healthcheck():
     subprocess.Popen(['/bin/bash', 'healthcheck/healthcheck.sh'])
     logger.info('Started health check.')
 
@@ -923,5 +923,5 @@ if __name__ == '__main__':
     set_up_instadeploy_if_deploy_password_is_set(m2ee)
     start_metrics(m2ee)
     start_nginx()
-    set_up_healthcheck()
+    start_healthcheck()
     loop_until_process_dies(m2ee)

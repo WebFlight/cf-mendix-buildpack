@@ -898,9 +898,9 @@ def complete_start_procedure_safe_to_use_for_restart(m2ee):
     configure_debugger(m2ee)
 
 def set_up_healthcheck():
-    subprocess.Popen([
-        '/bin/bash', 'healthcheck/healthcheck.sh'
-    ])
+    # subprocess.Popen([
+    #     '/bin/bash', 'healthcheck/healthcheck.sh'
+    # ])
     logger.info('Started health check.')
 
 if __name__ == '__main__':

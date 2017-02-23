@@ -899,8 +899,9 @@ def complete_start_procedure_safe_to_use_for_restart(m2ee):
 
 def set_up_healthcheck():
     subprocess.Popen([
-        '/bin/bash', 'nginx', 'healthcheck/healthcheck.sh'
+        '/bin/bash', 'healthcheck/healthcheck.sh'
     ])
+    logger.info('Started health check.')
 
 if __name__ == '__main__':
     if os.getenv('CF_INSTANCE_INDEX') is None:

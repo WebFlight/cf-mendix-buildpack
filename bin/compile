@@ -182,7 +182,6 @@ def copy_buildpack_resources():
         os.path.join(BUILDPACK_DIR, 'healthcheck'),
         os.path.join(BUILD_DIR, 'healthcheck'),
     )
-    shutil.copyfile(os.path.join(BUILDPACK_DIR, 'healthcheck/healthcheck'), '/etc/cron.d/healthcheck')
     if buildpackutil.get_new_relic_license_key():
         shutil.copytree(
             os.path.join(BUILDPACK_DIR, 'newrelic'),

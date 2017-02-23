@@ -6,4 +6,4 @@ do
       killall -u vcap  
   fi
   sleep 10
-done &
+done

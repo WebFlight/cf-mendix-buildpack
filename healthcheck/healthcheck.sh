@@ -9,11 +9,11 @@ function killAllVcapProcesses {
 
 while :
 do
-  # if ! pgrep -x "java" > /dev/null
-  # then
-  #   killAllVcapProcesses 
-  #   break
-  # fi
+  if ! pgrep -x "java" > /dev/null
+  then
+    killAllVcapProcesses 
+    break
+  fi
   if [ $total_live_time -lt $counter ]
     then
     killAllVcapProcesses

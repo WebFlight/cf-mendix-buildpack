@@ -19,7 +19,6 @@ do
     killAllVcapProcesses
     break
   fi
-  echo $counter
   let counter=counter+1
   sleep 1
 done

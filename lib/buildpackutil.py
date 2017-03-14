@@ -126,6 +126,8 @@ def download_and_unpack(url, destination, cache_dir='/tmp/downloads'):
     mkdir_p(destination)
     cached_location = os.path.join(cache_dir, file_name)
 
+    print(cached_location)
+
     logging.debug('Looking for {cached_location}'.format(
         cached_location=cached_location
     ))

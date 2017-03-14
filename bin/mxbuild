@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+import os
+import sys
+import json
+import shutil
+import logging
+import zipfile
+import subprocess
+
+BUILD_DIR = sys.argv[1]
+CACHE_DIR = os.path.join(sys.argv[2], 'bust')
+DOT_LOCAL_LOCATION = os.path.join(BUILD_DIR, '.local')
+BUILDPACK_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+BUILD_ERRORS_JSON = '/tmp/builderrors.json'
+
+sys.path.insert(0, os.path.join(BUILDPACK_DIR, 'lib'))
+import requests
+import buildpackutil
+from m2ee.version import MXVersion
+
+def get_runtime_version():
+    file_name = os.path.join(BUILD_DIR, 'model', 'metadata.json')
+    try:
+        with open(file_name) as file_handle:
+            data = json.loads(file_handle.read())
+            return MXVersion(data['RuntimeVersion'])
+    except IOError:
+        import sqlite3
+        cursor = sqlite3.connect(get_mpr_file()).cursor()
+        cursor.execute('SELECT _ProductVersion FROM _MetaData LIMIT 1')
+        record = cursor.fetchone()
+        return MXVersion(record[0])
+
+def run_mx_build():
+    mx_version = get_runtime_version()
+    mono_location = buildpackutil.ensure_and_get_mono(mx_version, CACHE_DIR)
+    mono_env = buildpackutil._get_env_with_monolib(mono_location)
+
+    mxbuild_location = os.path.join(DOT_LOCAL_LOCATION, 'mxbuild')
+
+    buildpackutil.ensure_mxbuild_in_directory(
+        mxbuild_location, mx_version, CACHE_DIR
+    )
+
+    jdk_location = buildpackutil.ensure_and_return_java_sdk(
+        mx_version, CACHE_DIR
+    )
+
+    buildpackutil.lazy_remove_file(BUILD_ERRORS_JSON)
+
+    args = [
+        os.path.join(mono_location, 'bin/mono'),
+        '--config', os.path.join(mono_location, 'etc/mono/config'),
+        os.path.join(mxbuild_location, 'modeler/mxbuild.exe'),
+        '--target=package',
+        '--output=/tmp/model.mda',
+        '--java-home=%s' % jdk_location,
+        '--java-exe-path=%s' % os.path.join(jdk_location, 'bin/java'),
+    ]
+
+    if mx_version >= 6.4 or os.environ.get('FORCE_WRITE_BUILD_ERRORS'):
+        args.append('--write-errors=%s' % BUILD_ERRORS_JSON)
+        logging.debug('Will write build errors to %s' % BUILD_ERRORS_JSON)
+
+    if os.environ.get('FORCED_MXBUILD_URL'):
+        args.append('--loose-version-check')
+        logging.warning(
+            'Using forced mxbuild version, the model will be converted'
+        )
+
+    args.append(get_mpr_file())
+
+    try:
+        logging.debug('subprocess call {args}'.format(args=args))
+        subprocess.check_call(args, env=mono_env)
+    except subprocess.CalledProcessError as e:
+        buildstatus_callback(BUILD_ERRORS_JSON)
+        raise e
+
+    for file_name in os.listdir(BUILD_DIR):
+        path = os.path.join(BUILD_DIR, file_name)
+        if file_name != '.local':
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            else:
+                os.unlink(path)
+    zf = zipfile.ZipFile('/tmp/model.mda')
+    try:
+        zf.extractall(BUILD_DIR)
+    finally:
+        zf.close()
+
+
+if __name__ == '__main__':
+    run_mx_build()

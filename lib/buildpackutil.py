@@ -120,6 +120,7 @@ def get_blobstore_url(filename):
 def download_and_unpack(url, destination, cache_dir='/tmp/downloads'):
     print(url)
     print(destination)
+    print(cache_dir)
     file_name = url.split('/')[-1]
     mkdir_p(cache_dir)
     mkdir_p(destination)

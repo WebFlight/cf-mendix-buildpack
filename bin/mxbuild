@@ -13,6 +13,12 @@ DOT_LOCAL_LOCATION = os.path.join(BUILD_DIR, '.local')
 BUILDPACK_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 BUILD_ERRORS_JSON = '/tmp/builderrors.json'
 
+print(BUILD_DIR)
+print(CACHE_DIR)
+print(DOT_LOCAL_LOCATION)
+print(BUILDPACK_DIR)
+print(BUILD_ERRORS_JSON)
+
 sys.path.insert(0, os.path.join(BUILDPACK_DIR, 'lib'))
 import requests
 import buildpackutil

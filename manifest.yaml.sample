@@ -1,0 +1,19 @@
+---
+applications:
+- name: app-name
+  memory: 512M
+  host: subdomain
+  buildpack: https://github.com/WebFlight/cf-mendix-buildpack
+  instances: 2
+  timeout: 180
+  env:
+    ## S3 example
+    # MX_COM_MENDIX_CORE_STORAGESERVICE: com.mendix.storage.s3
+    # S3_ACCESS_KEY_ID: AccessKeyId
+    # S3_BUCKET_NAME: Name
+    # S3_SECRET_ACCESS_KEY: SecretAccessKey
+    # S3_ENDPOINT: Endpoint
+    CF_STARTUP_TIMEOUT: 5
+    ADMIN_PASSWORD: SomeP@ssw0rd
+  services:
+    # - service-name

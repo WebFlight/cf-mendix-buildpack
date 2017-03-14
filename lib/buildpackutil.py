@@ -118,15 +118,10 @@ def get_blobstore_url(filename):
 
 
 def download_and_unpack(url, destination, cache_dir='/tmp/downloads'):
-    print(url)
-    print(destination)
-    print(cache_dir)
     file_name = url.split('/')[-1]
     mkdir_p(cache_dir)
     mkdir_p(destination)
     cached_location = os.path.join(cache_dir, file_name)
-
-    print(cached_location)
 
     logging.debug('Looking for {cached_location}'.format(
         cached_location=cached_location
@@ -364,6 +359,9 @@ def ensure_and_return_java_sdk(mx_version, cache_dir):
     java_version = get_java_version(mx_version)
 
     rootfs_java_path = '/usr/lib/jvm/jdk-%s-oracle-x64' % java_version
+
+    print(rootfs_java_path)
+    print(os.path.isdir(rootfs_java_path))
 
     if os.path.isdir(rootfs_java_path):
         os.symlink(os.path.join(rootfs_java_path, 'bin/java'), destination)

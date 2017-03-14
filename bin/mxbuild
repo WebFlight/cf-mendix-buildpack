@@ -34,6 +34,27 @@ def get_runtime_version():
 def get_mpr_file():
     return buildpackutil.get_mpr_file_from_dir(BUILD_DIR)
 
+def buildstatus_callback(error_file):
+    generic_build_failure = {"problems": [
+        {
+            "severity": "Error",
+            "message": "Failed to build the model, please check application logs for details.",
+            "locations": []
+        }
+    ]}
+    if os.path.exists(error_file):
+        with open(error_file, 'r') as b:
+            builddata = b.read()
+    else:
+        builddata = json.dumps(generic_build_failure)
+    callback_url = os.environ.get('BUILD_STATUS_CALLBACK_URL')
+    if callback_url:
+        logging.info('Submitting build status')
+        requests.put(callback_url, builddata)
+        logging.info('Submitted build status')
+    else:
+        logging.warning('No build status callback url set, so not going to submit the status')
+
 def run_mx_build():
     mx_version = get_runtime_version()
     mono_location = buildpackutil.ensure_and_get_mono(mx_version, CACHE_DIR)

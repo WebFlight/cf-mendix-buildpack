@@ -37,6 +37,9 @@ def get_runtime_version():
         record = cursor.fetchone()
         return MXVersion(record[0])
 
+def get_mpr_file():
+    return buildpackutil.get_mpr_file_from_dir(BUILD_DIR)
+
 def run_mx_build():
     mx_version = get_runtime_version()
     mono_location = buildpackutil.ensure_and_get_mono(mx_version, CACHE_DIR)

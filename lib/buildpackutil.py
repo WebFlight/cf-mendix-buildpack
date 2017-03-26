@@ -360,9 +360,6 @@ def ensure_and_return_java_sdk(mx_version, cache_dir):
 
     rootfs_java_path = '/usr/lib/jvm/jdk-%s-oracle-x64' % java_version
 
-    print(rootfs_java_path)
-    print(os.path.isdir(rootfs_java_path))
-
     if os.path.isdir(rootfs_java_path):
         os.symlink(os.path.join(rootfs_java_path, 'bin/java'), destination)
     else:
